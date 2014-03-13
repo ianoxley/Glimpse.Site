@@ -30,7 +30,7 @@
     </div>
     <div class="comm-page-contriubutors">
         <h2>Committers</h2>
-        <div class="stat-group stats-contributors">
+        <div id="github-committers" class="stat-group stats-contributors">
             <dl class="stat">
                 <dt class="stat__title delta">Anthony van der Hoorn</dt> 
                 <dd class="stat__value">
@@ -54,7 +54,7 @@
             </dl>
         </div>
         <h2>Contributors</h2>
-        <div class="stat-group stats-contributors">
+        <div id="github-contributors" class="stat-group stats-contributors">
             <dl class="stat">
                 <dt class="stat__title delta">Kristoffer Ahl</dt> 
                 <dd class="stat__value">
@@ -145,3 +145,24 @@
             </dl>
         <hr class="clearer" />
         </div>
+
+@section scripts {
+    <script id="contrib-tmpl" type="text/template">
+        <ul>
+            {{#people}}
+            <li class="person-container vcard">
+                <h3>{{name}}</h3>
+                <img src="{{avatarUrl}}" alt="{{name}}" class="photo" />
+                <ul class="links">
+                    {{#twitterUsername}}
+                    <li><a href="http://twitter.com/{{twitterUsername}}" class="url">@@{{twitterUsername}}</a></li>
+                    {{/twitterUsername}}
+                    <li>
+                        <a href="http://github.com/{{githubUsername}}" class="url">{{githubUsername}}</a>
+                    </li>
+                </ul>
+            </li>
+            {{/people}}
+        </ul>
+    </script>
+}

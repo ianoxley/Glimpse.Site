@@ -78,16 +78,42 @@ function loadInlineVideo() {
     $('.inner-monitor').empty().append(inlineVideoHTML);
 }
 
-function loadContributors() {
-    $.getJSON('/api/contributors', function (data) {
-        var tmpl = $('#contrib-tmpl').html(),
-            contribElem = $('#contributors');
+function loadContributors(callback) {
+    $.getJSON('/api/contributors', callback || $.noop);
+}
 
-        contribElem
-            .addClass('loaded')
-            .find('section')
-            .html(Mustache.render(tmpl, { people: data }));
-    });
+function homepageContributors(data) {
+    var tmpl = $('#contrib-tmpl').html(),
+        contribElem = $('#contributors');
+
+    contribElem
+        .addClass('loaded')
+        .find('section')
+        .html(Mustache.render(tmpl, { people: data }));
+}
+
+function communityContributors(data) {
+    var committers = [],
+        contributors = [],
+        current,
+        currentCategory,
+        tmpl = $('#contrib-tmpl').html(),
+        committersElem = $('#github-committers'),
+        contributorsElem = $('#github-contributors'),
+        i, length;
+
+    for (i = 0, length = data.length; i < length; i++) {
+        current = data[i];
+        currentCategory = current.category;
+        if (currentCategory === 'Reviewer' || currentCategory === 'Committer') {
+            committers.push(current);
+        } else {
+            contributors.push(current);
+        }
+    }
+
+    committersElem.html(Mustache.render(tmpl, { people: committers }));
+    contributorsElem.html(Mustache.render(tmpl, { people: contributors }));
 }
 
 
@@ -96,7 +122,11 @@ $().ready(function () {
 
     var theBody = $('body');
     if (theBody.hasClass('home-page')) {
-        loadContributors();
+        loadContributors(homepageContributors);
+    }
+
+    if (theBody.hasClass('community-page')) {
+        loadContributors(communityContributors);
     }
     
     $('.hover-point').each(function() {
